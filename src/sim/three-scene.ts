@@ -25,6 +25,10 @@ export interface ThreeSim {
   setDebugText: (text: string) => void
 }
 
+export interface ThreeSimOptions {
+  onModelProgress?: (progress: { loaded: number; total?: number }) => void
+}
+
 interface RoomParts {
   ambient: THREE.HemisphereLight
   sun: THREE.DirectionalLight
@@ -85,7 +89,10 @@ function createMistTexture() {
   return new THREE.CanvasTexture(canvas)
 }
 
-function createRoom(scene: THREE.Scene, onReady: () => void): RoomParts {
+function createRoom(
+  scene: THREE.Scene,
+  params: { onReady: () => void; onModelProgress?: (progress: { loaded: number; total?: number }) => void },
+): RoomParts {
   RectAreaLightUniformsLib.init()
 
   // --- MATERIALE SMART BLINDS ---
@@ -143,12 +150,14 @@ function createRoom(scene: THREE.Scene, onReady: () => void): RoomParts {
     model.scale.set(1, 1, 1) 
     model.position.set(0, 0, 0)
     scene.add(model)
-      onReady()
+      params.onReady()
     },
-    undefined,
+    (evt) => {
+      params.onModelProgress?.({ loaded: evt.loaded, total: evt.total })
+    },
     (error) => {
       console.error('GLB Error:', error)
-      onReady()
+      params.onReady()
     },
   )
 
@@ -305,7 +314,7 @@ function createRoom(scene: THREE.Scene, onReady: () => void): RoomParts {
   }
 }
 
-export function createThreeSim(canvas: HTMLCanvasElement): ThreeSim {
+export function createThreeSim(canvas: HTMLCanvasElement, opts: ThreeSimOptions = {}): ThreeSim {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false })
   configureRenderer(renderer)
 
@@ -410,7 +419,7 @@ export function createThreeSim(canvas: HTMLCanvasElement): ThreeSim {
   const ready = new Promise<void>((resolve) => {
     resolveReady = resolve
   })
-  const room = createRoom(scene, () => resolveReady?.())
+  const room = createRoom(scene, { onReady: () => resolveReady?.(), onModelProgress: opts.onModelProgress })
 
   const composer = new EffectComposer(renderer)
   const renderPass = new RenderPass(scene, camera)

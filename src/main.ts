@@ -12,8 +12,12 @@ if (!appEl) throw new Error('Missing #app')
 appEl.innerHTML = `
   <div id="loading" class="loading">
     <div class="loading-card">
-      <div class="loading-title">Loading room…</div>
-      <div class="loading-sub">Caricamento modello 3D e scena</div>
+      <div id="loadingTitle" class="loading-title">Loading room…</div>
+      <div id="loadingSub" class="loading-sub">Caricamento modello 3D e scena</div>
+      <div class="loading-meter" aria-hidden="true">
+        <div id="loadingBar" class="loading-meter-bar" style="width:0%"></div>
+      </div>
+      <div id="loadingMeta" class="loading-meta">0%</div>
     </div>
   </div>
   <canvas id="c"></canvas>
@@ -257,9 +261,31 @@ const tlAutoLintEl = getEl<HTMLInputElement>('tlAutoLint')
 // Logic
 const canvas = getEl<HTMLCanvasElement>('c')
 const loadingEl = getEl<HTMLDivElement>('loading')
+const loadingTitleEl = getEl<HTMLDivElement>('loadingTitle')
+const loadingSubEl = getEl<HTMLDivElement>('loadingSub')
+const loadingBarEl = getEl<HTMLDivElement>('loadingBar')
+const loadingMetaEl = getEl<HTMLDivElement>('loadingMeta')
 const infoBtn = getEl<HTMLButtonElement>('infoBtn')
 const aboutDialog = getEl<HTMLDialogElement>('aboutDialog')
-const three = createThreeSim(canvas)
+const three = createThreeSim(canvas, {
+  onModelProgress(progress) {
+    const { loaded, total } = progress
+    const ratio = typeof total === 'number' && total > 0 ? loaded / total : null
+    const pct = ratio === null ? null : Math.max(0, Math.min(100, Math.round(ratio * 100)))
+
+    if (pct !== null) {
+      loadingBarEl.style.width = `${pct}%`
+      loadingMetaEl.textContent = `${pct}%`
+      loadingSubEl.textContent = 'Download modello 3D…'
+      return
+    }
+
+    // Fallback quando `total` non è disponibile
+    const mb = Math.max(0, loaded) / (1024 * 1024)
+    loadingMetaEl.textContent = `${mb.toFixed(1)} MB`
+    loadingSubEl.textContent = 'Download modello 3D…'
+  }
+})
 const config = createDefaultConfig()
 let model = createDefaultModel(performance.now())
 
@@ -564,6 +590,8 @@ let isLoadingHidden = false
 function hideLoading() {
   if (isLoadingHidden) return
   isLoadingHidden = true
+  loadingTitleEl.textContent = 'Loaded'
+  loadingSubEl.textContent = 'Inizializzazione scena…'
   loadingEl.classList.add('hidden')
 }
 
