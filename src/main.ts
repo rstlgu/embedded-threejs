@@ -72,7 +72,7 @@ appEl.innerHTML = `
   </div>
 
   <div class="ui-layer">
-    <aside class="panel compact">
+    <aside id="controlPanel" class="panel compact">
       <p class="subtitle">Control Panel</p>
 
       <div class="control-group">
@@ -177,6 +177,23 @@ appEl.innerHTML = `
     </div>
   </div>
 
+  <div id="mobileSheetBackdrop" class="mobile-sheet-backdrop" aria-hidden="true"></div>
+  <button
+    id="mobilePanelBtn"
+    class="mobile-panel-fab"
+    type="button"
+    aria-label="Apri Control Panel"
+    aria-controls="controlPanel"
+    aria-expanded="false"
+  >
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M4 7h10v2H4V7Zm0 8h10v2H4v-2Zm12 2v-2h4v2h-4ZM16 9V7h4v2h-4ZM14 11h2v10h-2V11Zm-6 0h2v10H8V11Zm10 0h2v10h-2V11Z"
+      />
+    </svg>
+  </button>
+
   <button id="infoBtn" class="info-fab" type="button" aria-label="Info">
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
       <path fill="currentColor" d="M11 9h2V7h-2v2Zm1 13C6.935 22 3 18.065 3 13S6.935 4 12 4s9 3.935 9 9-3.935 9-9 9Zm0-2a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm-1-3h2v-7h-2v7Z"/>
@@ -232,6 +249,11 @@ const btnEl = getEl<HTMLInputElement>('btn')
 const winPwmEl = getEl<HTMLInputElement>('winPwm')
 const lampPwmEl = getEl<HTMLInputElement>('lampPwm')
 const humidPwmEl = getEl<HTMLInputElement>('humidPwm')
+
+// Mobile Sheet
+const controlPanelEl = getEl<HTMLElement>('controlPanel')
+const mobilePanelBtnEl = getEl<HTMLButtonElement>('mobilePanelBtn')
+const mobileSheetBackdropEl = getEl<HTMLDivElement>('mobileSheetBackdrop')
 
 // Stats Refs
 const statTime = getEl<HTMLSpanElement>('statTime')
@@ -304,6 +326,26 @@ function log(msg: string, type: 'info' | 'state' | 'action' = 'info') {
   consoleEl.scrollTop = consoleEl.scrollHeight
 }
 clearLogBtn.onclick = () => { consoleEl.innerHTML = '' }
+
+function setMobileSheetOpen(next: boolean) {
+  const isOpen = !!next
+  controlPanelEl.classList.toggle('is-open', isOpen)
+  mobileSheetBackdropEl.classList.toggle('is-open', isOpen)
+  mobilePanelBtnEl.setAttribute('aria-expanded', String(isOpen))
+}
+
+mobilePanelBtnEl.addEventListener('click', () => {
+  setMobileSheetOpen(!controlPanelEl.classList.contains('is-open'))
+})
+mobileSheetBackdropEl.addEventListener('click', () => {
+  setMobileSheetOpen(false)
+})
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') setMobileSheetOpen(false)
+})
+window.matchMedia('(max-width: 640px)').addEventListener('change', (e) => {
+  if (!e.matches) setMobileSheetOpen(false)
+})
 
 infoBtn.addEventListener('click', () => {
   if (typeof aboutDialog.showModal === 'function') aboutDialog.showModal()

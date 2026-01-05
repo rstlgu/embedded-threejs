@@ -229,6 +229,30 @@ input:checked + .slider:before { transform: translateX(16px); }
 .log-warn { color: var(--warning); }
 .log-action { color: var(--success); }
 
+@media (max-width: 640px) {
+  .terminal {
+    max-width: 100%;
+    height: 92px;
+    border-radius: 10px;
+  }
+
+  .terminal-header {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .terminal-body {
+    padding: 6px 8px;
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  .log-time {
+    font-size: 9px;
+    margin-right: 6px;
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }

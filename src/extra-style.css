@@ -48,10 +48,6 @@
 
 /* Mobile: nascondi Control Panel e mostra solo valori "gaming benchmark" in alto a destra */
 @media (max-width: 640px) {
-  .panel.compact {
-    display: none;
-  }
-
   .stats-overlay {
     top: 12px;
     right: 12px;
@@ -81,6 +77,62 @@
 
   .stats-val {
     color: rgba(255, 255, 255, 0.92);
+  }
+
+  /* Bottom sheet: riusa il Control Panel esistente */
+  .panel.compact {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    max-height: min(78vh, 640px);
+    overflow: auto;
+    z-index: 30;
+    border-radius: 16px;
+    transform: translateY(calc(100% + 20px));
+    transition: transform 220ms ease;
+  }
+
+  .panel.compact.is-open {
+    transform: translateY(0);
+  }
+
+  .mobile-sheet-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 29;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  .mobile-sheet-backdrop.is-open {
+    display: block;
+  }
+
+  .mobile-panel-fab {
+    position: fixed;
+    left: 12px;
+    bottom: 12px;
+    z-index: 31;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(15, 15, 20, 0.7);
+    color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+    cursor: pointer;
+  }
+
+  .mobile-panel-fab:hover {
+    border-color: rgba(255, 255, 255, 0.22);
   }
 }
 
