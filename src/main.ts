@@ -185,7 +185,7 @@ appEl.innerHTML = `
       <div class="about-header">
         <div>
           <div class="about-title">Embedded System Simulation</div>
-          <div class="about-sub">Dashboard interattiva per controllo illuminazione e umidità (threejs)</div>
+          <div class="about-sub">react/vite + threejs</div>
         </div>
         <button class="about-close" aria-label="Chiudi" value="close">✕</button>
       </div>
@@ -193,7 +193,13 @@ appEl.innerHTML = `
       <div class="about-body">
         <div class="about-line">
           Developed by
-          <a class="about-link" href="https://github.com/rstlgu/embedded-threejs" target="_blank" rel="noreferrer">@rstlgu</a>
+          <a class="about-link" href="https://github.com/rstlgu" target="_blank" rel="noreferrer">@rstlgu</a>
+        </div>
+        <div class="about-line" style="margin-top:10px">
+          Repository:
+          <a class="about-link" href="https://github.com/rstlgu/embedded-threejs.git" target="_blank" rel="noreferrer">
+            embedded-threejs
+          </a>
         </div>
       </div>
     </form>
