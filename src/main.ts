@@ -69,7 +69,6 @@ appEl.innerHTML = `
 
   <div class="ui-layer">
     <aside class="panel compact">
-      <h1>Smart Room</h1>
       <p class="subtitle">Control Panel</p>
 
       <div class="control-group">
