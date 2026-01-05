@@ -1,0 +1,316 @@
+/* Gaming Stats Overlay Style */
+.stats-overlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 12; /* sopra labels */
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  color: #fff;
+  min-width: 220px;
+  pointer-events: none; /* Click-through */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.stats-row.header {
+  font-weight: bold;
+  color: var(--accent);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.stats-label {
+  color: #aaa;
+}
+
+.stats-val {
+  font-weight: 600;
+  color: #fff;
+}
+
+.stats-val.highlight { color: var(--success); }
+.stats-val.warn { color: var(--warning); }
+
+/* Compact Controls Panel */
+.panel.compact {
+  width: 280px;
+  background: rgba(15, 15, 20, 0.9);
+}
+
+.debug-section {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px dashed rgba(255,255,255,0.1);
+}
+
+.debug-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.debug-title:hover { color: #fff; }
+
+.hidden { display: none !important; }
+
+/* Info FAB + About dialog */
+.info-fab {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  z-index: 20;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(15, 15, 20, 0.7);
+  color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+  cursor: pointer;
+}
+
+.info-fab:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.about-dialog {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.about-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.about-card {
+  width: min(560px, calc(100vw - 32px));
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(15, 15, 20, 0.92);
+  color: #fff;
+  padding: 16px;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+}
+
+.about-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.about-title {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.92);
+}
+
+.about-sub {
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.68);
+  line-height: 1.35;
+}
+
+.about-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.9);
+  cursor: pointer;
+}
+
+.about-close:hover {
+  border-color: rgba(255,255,255,0.2);
+}
+
+.about-body {
+  margin-top: 14px;
+}
+
+.about-line {
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+}
+
+.about-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.about-link:hover {
+  text-decoration: underline;
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(1200px 800px at 20% 10%, rgba(69, 99, 255, 0.22), transparent 55%),
+    radial-gradient(900px 700px at 80% 30%, rgba(0, 255, 210, 0.10), transparent 60%),
+    rgba(5, 5, 5, 0.9);
+  z-index: 50;
+}
+
+.loading-card {
+  background: rgba(15, 15, 20, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 18px 18px;
+  min-width: 280px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+
+.loading-title {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: #fff;
+  letter-spacing: 0.4px;
+}
+
+.loading-sub {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* 3D tags (CSS2D) */
+.tag3d {
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  background: rgba(15, 15, 20, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 8px 10px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+  min-width: 110px;
+}
+
+.tag3d-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+}
+
+.tag3d-value {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-icon {
+  width: 44px;
+  height: 40px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  font-size: 14px;
+}
+
+/* Player (minimal) */
+.player-bar {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+}
+
+.player-row {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.player-time {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 8px;
+  font-family: var(--font-mono);
+}
+
+.player-time-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.55);
+}
+
+.player-time-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.select:disabled {
+  opacity: 0.5;
+}
+
