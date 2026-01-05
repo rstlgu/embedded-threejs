@@ -46,6 +46,44 @@
 .stats-val.highlight { color: var(--success); }
 .stats-val.warn { color: var(--warning); }
 
+/* Mobile: nascondi Control Panel e mostra solo valori "gaming benchmark" in alto a destra */
+@media (max-width: 640px) {
+  .panel.compact {
+    display: none;
+  }
+
+  .stats-overlay {
+    top: 12px;
+    right: 12px;
+    padding: 8px 10px;
+    min-width: unset;
+    border-left: 0;
+    border: 0;
+    background: rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(6px);
+    box-shadow: none;
+  }
+
+  /* Rimuove intestazioni/sezioni: solo valori */
+  .stats-row.header {
+    display: none;
+  }
+
+  .stats-row {
+    margin-bottom: 4px;
+    font-size: 11px;
+    line-height: 1.15;
+  }
+
+  .stats-label {
+    color: rgba(255, 255, 255, 0.62);
+  }
+
+  .stats-val {
+    color: rgba(255, 255, 255, 0.92);
+  }
+}
+
 /* Compact Controls Panel */
 .panel.compact {
   width: 280px;
