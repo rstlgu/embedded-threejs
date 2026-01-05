@@ -177,20 +177,14 @@ appEl.innerHTML = `
     </div>
   </div>
 
-  <div id="mobileSheetBackdrop" class="mobile-sheet-backdrop" aria-hidden="true"></div>
-  <button
-    id="mobilePanelBtn"
-    class="mobile-panel-fab"
-    type="button"
-    aria-label="Apri Control Panel"
-    aria-controls="controlPanel"
-    aria-expanded="false"
-  >
+  <button id="mobileControlBtn" class="mobile-fab mobile-fab--left" type="button" aria-label="Control Panel">
     <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M4 7h10v2H4V7Zm0 8h10v2H4v-2Zm12 2v-2h4v2h-4ZM16 9V7h4v2h-4ZM14 11h2v10h-2V11Zm-6 0h2v10H8V11Zm10 0h2v10h-2V11Z"
-      />
+      <path fill="currentColor" d="M4 7h10v2H4V7Zm0 8h10v2H4v-2Zm12 2v-2h4v2h-4ZM16 9V7h4v2h-4ZM14 11h2v10h-2V11Zm-6 0h2v10H8V11Zm10 0h2v10h-2V11Z" />
+    </svg>
+  </button>
+  <button id="mobileLogBtn" class="mobile-fab mobile-fab--left2" type="button" aria-label="Serial Log">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <path fill="currentColor" d="M4 6h16v12H4V6Zm2 2v8h12V8H6Zm1 1h2v2H7V9Zm0 4h2v2H7v-2Zm4-4h6v2h-6V9Zm0 4h6v2h-6v-2Z"/>
     </svg>
   </button>
 
@@ -199,6 +193,26 @@ appEl.innerHTML = `
       <path fill="currentColor" d="M11 9h2V7h-2v2Zm1 13C6.935 22 3 18.065 3 13S6.935 4 12 4s9 3.935 9 9-3.935 9-9 9Zm0-2a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm-1-3h2v-7h-2v7Z"/>
     </svg>
   </button>
+
+  <dialog id="mobileControlDialog" class="mobile-dialog">
+    <div class="mobile-dialog-card">
+      <div class="mobile-dialog-header">
+        <div class="mobile-dialog-title">Control Panel</div>
+        <button id="mobileControlClose" class="mobile-dialog-close" type="button" aria-label="Chiudi">✕</button>
+      </div>
+      <div id="mobileControlHost" class="mobile-dialog-body"></div>
+    </div>
+  </dialog>
+
+  <dialog id="mobileLogDialog" class="mobile-dialog">
+    <div class="mobile-dialog-card">
+      <div class="mobile-dialog-header">
+        <div class="mobile-dialog-title">Serial Log</div>
+        <button id="mobileLogClose" class="mobile-dialog-close" type="button" aria-label="Chiudi">✕</button>
+      </div>
+      <div id="mobileLogHost" class="mobile-dialog-body"></div>
+    </div>
+  </dialog>
 
   <dialog id="aboutDialog" class="about-dialog">
     <form method="dialog" class="about-card">
@@ -250,10 +264,27 @@ const winPwmEl = getEl<HTMLInputElement>('winPwm')
 const lampPwmEl = getEl<HTMLInputElement>('lampPwm')
 const humidPwmEl = getEl<HTMLInputElement>('humidPwm')
 
-// Mobile Sheet
+// Mobile dialogs (Control + Log)
 const controlPanelEl = getEl<HTMLElement>('controlPanel')
-const mobilePanelBtnEl = getEl<HTMLButtonElement>('mobilePanelBtn')
-const mobileSheetBackdropEl = getEl<HTMLDivElement>('mobileSheetBackdrop')
+const terminalElMaybe = document.querySelector<HTMLElement>('.terminal')
+if (!terminalElMaybe) throw new Error('Missing .terminal')
+const terminalEl: HTMLElement = terminalElMaybe
+
+const mobileControlBtn = getEl<HTMLButtonElement>('mobileControlBtn')
+const mobileLogBtn = getEl<HTMLButtonElement>('mobileLogBtn')
+const mobileControlDialog = getEl<HTMLDialogElement>('mobileControlDialog')
+const mobileLogDialog = getEl<HTMLDialogElement>('mobileLogDialog')
+const mobileControlHost = getEl<HTMLDivElement>('mobileControlHost')
+const mobileLogHost = getEl<HTMLDivElement>('mobileLogHost')
+const mobileControlClose = getEl<HTMLButtonElement>('mobileControlClose')
+const mobileLogClose = getEl<HTMLButtonElement>('mobileLogClose')
+
+const controlPanelHomeMaybe = controlPanelEl.parentElement
+const terminalHomeMaybe = terminalEl.parentElement
+if (!controlPanelHomeMaybe) throw new Error('Missing controlPanel parent')
+if (!terminalHomeMaybe) throw new Error('Missing terminal parent')
+const controlPanelHome: HTMLElement = controlPanelHomeMaybe
+const terminalHome: HTMLElement = terminalHomeMaybe
 
 // Stats Refs
 const statTime = getEl<HTMLSpanElement>('statTime')
@@ -327,24 +358,56 @@ function log(msg: string, type: 'info' | 'state' | 'action' = 'info') {
 }
 clearLogBtn.onclick = () => { consoleEl.innerHTML = '' }
 
-function setMobileSheetOpen(next: boolean) {
-  const isOpen = !!next
-  controlPanelEl.classList.toggle('is-open', isOpen)
-  mobileSheetBackdropEl.classList.toggle('is-open', isOpen)
-  mobilePanelBtnEl.setAttribute('aria-expanded', String(isOpen))
+function isMobileUi() {
+  return window.matchMedia('(max-width: 640px)').matches
 }
 
-mobilePanelBtnEl.addEventListener('click', () => {
-  setMobileSheetOpen(!controlPanelEl.classList.contains('is-open'))
-})
-mobileSheetBackdropEl.addEventListener('click', () => {
-  setMobileSheetOpen(false)
-})
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') setMobileSheetOpen(false)
-})
+function moveBackToHomes() {
+  controlPanelHome.appendChild(controlPanelEl)
+  terminalHome.appendChild(terminalEl)
+}
+
+function openMobileDialog(kind: 'control' | 'log') {
+  if (!isMobileUi()) return
+  if (typeof mobileControlDialog.showModal !== 'function') return
+
+  if (kind === 'control') {
+    mobileControlHost.appendChild(controlPanelEl)
+    mobileControlDialog.showModal()
+    return
+  }
+
+  mobileLogHost.appendChild(terminalEl)
+  mobileLogDialog.showModal()
+}
+
+function closeMobileDialog(kind: 'control' | 'log') {
+  if (kind === 'control') mobileControlDialog.close()
+  else mobileLogDialog.close()
+}
+
+mobileControlBtn.addEventListener('click', () => openMobileDialog('control'))
+mobileLogBtn.addEventListener('click', () => openMobileDialog('log'))
+mobileControlClose.addEventListener('click', () => closeMobileDialog('control'))
+mobileLogClose.addEventListener('click', () => closeMobileDialog('log'))
+
+mobileControlDialog.addEventListener('close', moveBackToHomes)
+mobileLogDialog.addEventListener('close', moveBackToHomes)
+
+function closeOnBackdropClick(dialogEl: HTMLDialogElement) {
+  dialogEl.addEventListener('click', (e) => {
+    if (e.target === dialogEl) dialogEl.close()
+  })
+}
+closeOnBackdropClick(mobileControlDialog)
+closeOnBackdropClick(mobileLogDialog)
+
 window.matchMedia('(max-width: 640px)').addEventListener('change', (e) => {
-  if (!e.matches) setMobileSheetOpen(false)
+  // se esci da mobile, rimettiamo tutto a posto e chiudiamo
+  if (e.matches) return
+  if (mobileControlDialog.open) mobileControlDialog.close()
+  if (mobileLogDialog.open) mobileLogDialog.close()
+  moveBackToHomes()
 })
 
 infoBtn.addEventListener('click', () => {

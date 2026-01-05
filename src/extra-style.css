@@ -79,43 +79,15 @@
     color: rgba(255, 255, 255, 0.92);
   }
 
-  /* Bottom sheet: riusa il Control Panel esistente */
-  .panel.compact {
-    position: fixed;
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
-    width: auto;
-    max-height: min(78vh, 640px);
-    overflow: auto;
-    z-index: 30;
-    border-radius: 16px;
-    transform: translateY(calc(100% + 20px));
-    transition: transform 220ms ease;
-  }
-
-  .panel.compact.is-open {
-    transform: translateY(0);
-  }
-
-  .mobile-sheet-backdrop {
+  /* Mobile: nascondi panel e log INLINE (si aprono come modal) */
+  .ui-layer > .panel.compact,
+  .ui-layer > .terminal {
     display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 29;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
   }
 
-  .mobile-sheet-backdrop.is-open {
-    display: block;
-  }
-
-  .mobile-panel-fab {
+  .mobile-fab {
     position: fixed;
     left: 12px;
-    bottom: 12px;
     z-index: 31;
     width: 42px;
     height: 42px;
@@ -124,15 +96,78 @@
     place-items: center;
     border: 1px solid rgba(255, 255, 255, 0.14);
     background: rgba(15, 15, 20, 0.7);
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 12px 30px rgba(0,0,0,0.45);
     cursor: pointer;
   }
 
-  .mobile-panel-fab:hover {
+  .mobile-fab--left {
+    bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .mobile-fab--left2 {
+    bottom: calc(62px + env(safe-area-inset-bottom));
+  }
+
+  .mobile-fab:hover {
     border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .mobile-dialog {
+    border: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .mobile-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+  }
+
+  .mobile-dialog-card {
+    width: min(560px, calc(100vw - 24px));
+    max-height: min(82vh, 720px);
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(15, 15, 20, 0.92);
+    color: #fff;
+    box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+  }
+
+  .mobile-dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .mobile-dialog-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.92);
+  }
+
+  .mobile-dialog-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.9);
+    cursor: pointer;
+  }
+
+  .mobile-dialog-body {
+    padding: 12px;
+    overflow: auto;
   }
 }
 

@@ -4,6 +4,10 @@
 
 Simulazione **web 3D** (Vite + TypeScript + Three.js) del progetto “Sistemi Embedded”: controllo di illuminazione, vetri oscuranti e umidità tramite **FSM** con temporizzazioni non bloccanti.
 
+## Demo
+
+- [Demo live](https://embedded-threejs.vercel.app/)
+
 ## Progetto originale (C / Arduino)
 
 Il progetto originale (firmware + documentazione) è qui:
